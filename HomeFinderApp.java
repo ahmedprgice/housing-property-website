@@ -150,13 +150,34 @@ private void addInputField(JDialog dialog, GridBagConstraints gbc, String label,
     dialog.add(comboBox, gbc);
 }
 
-    
 private void searchProperties() {
     try {
-        double minPrice = Double.parseDouble(minPriceField.getText());
-        double maxPrice = Double.parseDouble(maxPriceField.getText());
-        int minSqFt = Integer.parseInt(minSqFtField.getText());
-        int maxSqFt = Integer.parseInt(maxSqFtField.getText());
+        // Set default values
+        double minPrice = Double.MIN_VALUE;
+        double maxPrice = Double.MAX_VALUE;
+        int minSqFt = Integer.MIN_VALUE;
+        int maxSqFt = Integer.MAX_VALUE;
+
+        String minPriceInput = minPriceField.getText().trim();
+        if (!minPriceInput.isEmpty()) {
+            minPrice = Double.parseDouble(minPriceInput);
+        }
+
+        String maxPriceInput = maxPriceField.getText().trim();
+        if (!maxPriceInput.isEmpty()) {
+            maxPrice = Double.parseDouble(maxPriceInput);
+        }
+
+        String minSqFtInput = minSqFtField.getText().trim();
+        if (!minSqFtInput.isEmpty()) {
+            minSqFt = Integer.parseInt(minSqFtInput);
+        }
+
+        String maxSqFtInput = maxSqFtField.getText().trim();
+        if (!maxSqFtInput.isEmpty()) {
+            maxSqFt = Integer.parseInt(maxSqFtInput);
+        }
+
         String propertyType = propertyTypeField.getText().trim();
         String projectName = (String) projectNameComboBox.getSelectedItem(); // Get selected project name
 
