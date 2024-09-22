@@ -12,6 +12,16 @@ public class FileHandler {
     private static final String FILE_PATH = "properties.csv";
     private static final String TRANSACTION_FILE_PATH = "transactions.txt";
 
+    private FileHandler() {};
+    // Singleton Design Pattern
+    private static FileHandler instance;
+    public static FileHandler getInstance() {
+        if (instance = null) {
+            instance = new FileHandler();
+        } 
+        return  instance;
+    }
+
     // Read properties from the file
     public List<Property> readProperties() {
         List<Property> properties = new ArrayList<>();
