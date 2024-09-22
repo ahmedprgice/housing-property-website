@@ -119,13 +119,17 @@ public class Property {
         System.out.println("Price per Sq Ft: $" + pricePerSqft);
     }
     public String getDetails() {
-        return "Property Type: " + propertyType +
-               "\nSize: " + sqFt + " SqFt (" + sizeSqM + " SqM)" +
-               "\nNumber of Floors: " + noOfFloors +
-               "\nAddress: " + address +
-               "\nScheme: " + scheme +
-               "\nPrice: $" + price +
-               "\nYear: " + year +
-               "\nPrice per Sq Ft: $" + pricePerSqft;
+        return String.format(
+            "Property Type: %s\nSize: %d SqFt (%d SqM)\nNumber of Floors: %d\nAddress: %s\nScheme: %s\nPrice: $%.1f\nYear: %d\nPrice per Sq Ft: $%.1f",
+            propertyType, 
+            sqFt, 
+            sizeSqM, 
+            noOfFloors, 
+            address, 
+            scheme, 
+            price, 
+            year, 
+            pricePerSqft
+        );
     }
-}
+    }

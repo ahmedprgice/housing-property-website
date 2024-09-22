@@ -85,53 +85,49 @@ public class FileHandler {
     }
 
     // Read transactions from the file
-    public List<Transaction> readTransactions() {
+    public List<Transaction> loadTransactions() {
         List<Transaction> transactions = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(TRANSACTION_FILE_PATH))) {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(TRANSACTION_FILE_PATH))) {
+            skipHeader(reader);
             String line;
-            br.readLine(); // Skip the header
-            while ((line = br.readLine()) != null) {
-                String[] details = line.split("\t"); // Assuming the data is tab-separated
-
-                if (details.length < 11) {
-                    continue;
-                }
-
-                try {
-                    String transactionDate = details[0].trim();
-                    double transactionPrice = Double.parseDouble(details[1].trim());
-                    int transactionSqFt = Integer.parseInt(details[2].trim());
-                    String projectName = details[3].trim();
-                    int sizeSqM = Integer.parseInt(details[4].trim());
-                    String propertyType = details[5].trim();
-                    int noOfFloors = Integer.parseInt(details[6].trim());
-                    String address = details[7].trim();
-                    String scheme = details[8].trim();
-                    int year = Integer.parseInt(details[9].trim());
-                    double pricePerSqft = Double.parseDouble(details[10].trim());
-
-                    Transaction transaction = new Transaction(
-                            projectName,
-                            transactionDate,
-                            transactionPrice,
-                            transactionSqFt,
-                            sizeSqM,
-                            propertyType,
-                            noOfFloors,
-                            address,
-                            scheme,
-                            year,
-                            pricePerSqft
-                    );
+            while ((line = reader.readLine()) != null) {
+                Transaction transaction = parseTransaction(line);
+                if (transaction != null) {
                     transactions.add(transaction);
-                } catch (NumberFormatException e) {
-                    System.out.println("Error parsing number in file: " + e.getMessage());
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading transactions from file: " + e.getMessage());
         }
         return transactions;
+    }
+
+    private Transaction parseTransaction(String line) {
+        try {
+            String[] fields = line.split("\t");
+            if (fields.length < 10) {
+                System.err.println("Skipping improperly formatted transaction line: " + line);
+                return null;
+            }
+
+            String date = fields[0].trim();
+            String address = fields[5].trim();
+            int sizeSqFt = Integer.parseInt(fields[2].trim());
+            String projectName = fields[6].trim();
+            double price = Double.parseDouble(fields[7].trim());
+
+            return new Transaction(projectName, date, price, sizeSqFt, 0, "", 0, address, "", 0, 0.0);
+
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing transaction from line: " + line + " - " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Helper method to skip the header line in a file
+    private void skipHeader(BufferedReader reader) throws IOException {
+        reader.readLine(); // Skip the header
     }
 
     // Write a transaction to the file

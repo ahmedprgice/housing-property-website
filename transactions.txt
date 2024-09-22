@@ -6783,3 +6783,9 @@ DateOfValuation	Size SqM	SqFt	PropertyType	NoOfFloors	ADDRESS	SCHEME	PRICE	YEAR	
 2024-09-19	100	1000	Apartment	5	123 Main St	Project A	250000.0	2020	Project A	250.02024-09-21	1	1	apartment	1	123	ahmed	1.0	1	ahmed	1.0
 2024-09-21	1	1	apartment	1	123	ahmed	1.0	1	ahmed	1.0
 2024-09-21	1	1	apa	1	12	ahm	1.0	1	ahm	1.0
+2024-09-22	1	1	1	1	1	1	1.0	1	1	1.0
+2024-09-22	1	1	1	1	1	1	1.0	1	1	1.0
+2024-09-22	1	1	1	1	1	1	1.0	1	1	1.0
+2024-09-22	1	1	1	1	1	1	1.0	1	1	1.0
+2024-09-22	1	1	1	1	1	1	1.0	1	1	1.0
+2024-09-22	1	1	1	1	1	1	1.0	1	1	1.0

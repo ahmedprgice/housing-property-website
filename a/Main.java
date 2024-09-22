@@ -1,3 +1,4 @@
+package a;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -94,7 +95,7 @@ public class Main {
     }
 
     // Helper method to filter properties based on the criteria
-    private static List<Property> filterProperties(List<Property> properties, int minSqFt, int maxSqFt, double minPrice, double maxPrice, String facilities, String projectName) {
+    public static List<Property> filterProperties(List<Property> properties, int minSqFt, int maxSqFt, double minPrice, double maxPrice, String facilities, String projectName) {
         List<Property> filteredProperties = new ArrayList<>();
         
         for (Property property : properties) {
