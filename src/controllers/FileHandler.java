@@ -6,9 +6,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
 import models.Property;
 import models.Transaction;
 
@@ -16,6 +19,12 @@ public class FileHandler {
 
     private static final String FILE_PATH = "properties.csv";
     private static final String TRANSACTION_FILE_PATH = "transactions.txt";
+
+    private static final DateTimeFormatter[] DATE_FORMATTERS = {
+    DateTimeFormatter.ofPattern("d/M/yyyy"),
+    DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+    DateTimeFormatter.ISO_LOCAL_DATE 
+};
 
     // Singleton instance
     private static volatile FileHandler instance;
@@ -64,7 +73,18 @@ public class FileHandler {
                     int year = Integer.parseInt(details[7].trim());
                     double pricePerSqft = Double.parseDouble(details[8].trim());
 
-                    Property property = new Property(sizeSqM, sqFt, propertyType, noOfFloors, address, scheme, price, year, pricePerSqft);
+                        // Create Property using Builder
+                    Property property = new Property.Builder()
+                        .setSizeSqM(sizeSqM)
+                        .setSqFt(sqFt)
+                        .setPropertyType(propertyType)
+                        .setNoOfFloors(noOfFloors)
+                        .setAddress(address)
+                        .setScheme(scheme)
+                        .setPrice(price)
+                        .setYear(year)
+                        .setPricePerSqft(pricePerSqft)
+                        .build();
                     properties.add(property);
                 } catch (NumberFormatException e) {
                     System.out.println("Error parsing line: " + line + ". Error: " + e.getMessage());
@@ -131,7 +151,21 @@ public class FileHandler {
         } catch (IOException e) {
             System.err.println("Error reading transactions from file: " + e.getMessage());
         }
+
+        // Sort transactions by date
+        transactions.sort(Comparator.comparing(Transaction::getTransactionDate, Comparator.nullsLast(Comparator.naturalOrder())));
         return transactions;
+    }
+
+    private LocalDate parseTransactionDate(String dateStr) {
+        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
+            try {
+                return LocalDate.parse(dateStr, formatter);
+            } catch (DateTimeParseException e) {
+                // Continue trying the next format
+            }
+        }
+        throw new DateTimeParseException("Date format is invalid: " + dateStr, dateStr, 0);
     }
 
     private Transaction parseTransaction(String line) {
@@ -142,13 +176,15 @@ public class FileHandler {
                 return null;
             }
 
-            String date = fields[0].trim();
+            String dateStr = fields[0].trim();
             String address = fields[5].trim();
             int sizeSqFt = Integer.parseInt(fields[2].trim());
             String projectName = fields[6].trim();
             double price = Double.parseDouble(fields[7].trim());
 
-            return new Transaction(projectName, date, price, sizeSqFt, 0, "", 0, address, "", 0, 0.0);
+            LocalDate transactionDate = parseTransactionDate(dateStr);
+
+            return new Transaction(projectName, transactionDate, price, sizeSqFt, 0, "", 0, address, "", 0, 0.0);
 
         } catch (NumberFormatException e) {
             System.err.println("Error parsing transaction from line: " + line + " - " + e.getMessage());

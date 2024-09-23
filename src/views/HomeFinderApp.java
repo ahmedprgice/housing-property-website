@@ -1,43 +1,16 @@
 package views;
 
 import controllers.FileHandler;
-import models.Property;
-import models.Transaction;
-
-import javax.swing.*;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import models.Property;
+import models.Transaction;
 
 public class HomeFinderApp extends JFrame {
 
@@ -236,7 +209,7 @@ public class HomeFinderApp extends JFrame {
             // Create a transaction record
             Transaction transaction = new Transaction(
                     property.getScheme(), // projectName
-                    java.time.LocalDate.now().toString(), // transactionDate
+                    java.time.LocalDate.now(), // transactionDate
                     property.getPrice(), // transactionPrice
                     property.getSqFt(), // transactionSqFt
                     property.getSizeSqM(), // sizeSqM
@@ -469,9 +442,18 @@ public class HomeFinderApp extends JFrame {
                 double price = Double.parseDouble(priceField.getText());
                 int year = Integer.parseInt(yearField.getText());
                 double pricePerSqFt = Double.parseDouble(pricePerSqFtField.getText());
-
-                // Create new Property
-                Property newProperty = new Property(sizeSqM, sqFt, propertyType, noOfFloors, address, scheme, price, year, pricePerSqFt);
+                        // Create new Property using Builder
+                Property newProperty = new Property.Builder()
+                    .setSizeSqM(sizeSqM)
+                    .setSqFt(sqFt)
+                    .setPropertyType(propertyType)
+                    .setNoOfFloors(noOfFloors)
+                    .setAddress(address)
+                    .setScheme(scheme)
+                    .setPrice(price)
+                    .setYear(year)
+                    .setPricePerSqft(pricePerSqFt)
+                    .build();
                 allProperties.add(newProperty);
                 fileHandler.writeProperty(newProperty);
 

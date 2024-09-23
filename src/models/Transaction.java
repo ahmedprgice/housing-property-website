@@ -1,9 +1,11 @@
 package models;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Transaction {
     private String projectName;
-    private String transactionDate;
+    private LocalDate transactionDate;
     private double transactionPrice;
     private int transactionSqFt;
     private int sizeSqM;
@@ -14,7 +16,7 @@ public class Transaction {
     private int year;
     private double pricePerSqft;
 
-    public Transaction(String projectName, String transactionDate, double transactionPrice, int transactionSqFt,
+    public Transaction(String projectName, LocalDate transactionDate, double transactionPrice, int transactionSqFt,
                        int sizeSqM, String propertyType, int noOfFloors, String address, String scheme, int year, double pricePerSqft) {
         this.projectName = projectName;
         this.transactionDate = transactionDate;
@@ -31,7 +33,7 @@ public class Transaction {
 
     // Getters
     public String getProjectName() { return projectName; }
-    public String getTransactionDate() { return transactionDate; }
+    public String getTransactionDate() {return transactionDate.format(DateTimeFormatter.ISO_LOCAL_DATE);}
     public double getTransactionPrice() { return transactionPrice; }
     public int getTransactionSqFt() { return transactionSqFt; }
     public int getSizeSqM() { return sizeSqM; }           // Getter for sizeSqM

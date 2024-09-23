@@ -14,25 +14,18 @@ public class Property {
     private double pricePerSqft;
 
     // Constructor
-    public Property( int sizeSqM, int sqFt, String propertyType, int noOfFloors, String address, String scheme, double price, int year, double pricePerSqft) {
-      
-        this.sizeSqM = sizeSqM;
-        this.sqFt = sqFt;
-        this.propertyType = propertyType;
-        this.noOfFloors = noOfFloors;
-        this.address = address;
-        this.scheme = scheme;
-        this.price = price;
-        this.year = year;
-        this.pricePerSqft = pricePerSqft;
+    private Property(Builder builder) {
+        this.sizeSqM = builder.sizeSqM;
+        this.sqFt = builder.sqFt;
+        this.propertyType = builder.propertyType;
+        this.noOfFloors = builder.noOfFloors;
+        this.address = builder.address;
+        this.scheme = builder.scheme;
+        this.price = builder.price;
+        this.year = builder.year;
+        this.pricePerSqft = builder.pricePerSqft;
     }
 
-
-
-    public Property(int sqFt2, double price2, String propertyType2, String address2, String scheme2, int year2,
-            double pricePerSqft2) {
-        //TODO Auto-generated constructor stub
-    }
 
     // Getters and setters
     public int getSizeSqM() {
@@ -107,6 +100,33 @@ public class Property {
         this.pricePerSqft = pricePerSqft;
     }
 
+        // Builder class
+    public static class Builder {
+        private int sizeSqM;
+        private int sqFt;
+        private String propertyType;
+        private int noOfFloors;
+        private String address;
+        private String scheme;
+        private double price;
+        private int year;
+        private double pricePerSqft;
+
+        public Builder setSizeSqM(int sizeSqM) { this.sizeSqM = sizeSqM; return this; }
+        public Builder setSqFt(int sqFt) { this.sqFt = sqFt; return this; }
+        public Builder setPropertyType(String propertyType) { this.propertyType = propertyType; return this; }
+        public Builder setNoOfFloors(int noOfFloors) { this.noOfFloors = noOfFloors; return this; }
+        public Builder setAddress(String address) { this.address = address; return this; }
+        public Builder setScheme(String scheme) { this.scheme = scheme; return this; }
+        public Builder setPrice(double price) { this.price = price; return this; }
+        public Builder setYear(int year) { this.year = year; return this; }
+        public Builder setPricePerSqft(double pricePerSqft) { this.pricePerSqft = pricePerSqft; return this; }
+
+        public Property build() {
+            return new Property(this);
+        }
+    }
+
     // Method to display property details
     public void displayPropertyDetails() {
         System.out.println("Property Type: " + propertyType);
@@ -132,4 +152,4 @@ public class Property {
             pricePerSqft
         );
     }
-    }
+}
