@@ -1,15 +1,45 @@
 package views;
 
-import controllers.FileHandler;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension; // Add this import at the beginning of HomeFinderApp.java
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+
+import controllers.FileHandler;
 import models.Property;
 import models.Transaction;
 
@@ -32,7 +62,6 @@ public class HomeFinderApp extends JFrame {
         fileHandler = FileHandler.getInstance();
         fileHandler.initializeFile("properties.csv");
         fileHandler.initializeFile("transactions.txt");
-
         allProperties = fileHandler.readProperties();
 
         // Set up the main frame
@@ -95,50 +124,67 @@ public class HomeFinderApp extends JFrame {
     private void openPropertySearchUI() {
         // Create and display the Property Search UI
         JDialog searchDialog = new JDialog(this, "Property Search", true);
-        searchDialog.setSize(400, 500);
-
+        searchDialog.setSize(400, 600); // Set the size to match the "Add Property" dialog
         searchDialog.setLayout(new GridBagLayout());
-
+        
+        searchDialog.getContentPane().setBackground(new Color(5, 33, 67)); // Set background color to match "Add Property"
+    
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Create input fields
-        minPriceField = new JTextField();
-        maxPriceField = new JTextField();
-        minSqFtField = new JTextField();
-        maxSqFtField = new JTextField();
-        propertyTypeField = new JTextField();
-        projectNameComboBox = new JComboBox<>(getAllProjectNames()); // Initialize the ComboBox with project names
-
-        // Add components to the dialog
-        addInputField(searchDialog, gbc, "Minimum Price:", minPriceField, 0);
-        addInputField(searchDialog, gbc, "Maximum Price:", maxPriceField, 1);
-        addInputField(searchDialog, gbc, "Minimum SqFt:", minSqFtField, 2);
-        addInputField(searchDialog, gbc, "Maximum SqFt:", maxSqFtField, 3);
-        addInputField(searchDialog, gbc, "Property Type:", propertyTypeField, 4);
-        addInputField(searchDialog, gbc, "Project Name:", projectNameComboBox, 5); // Use ComboBox instead of TextField
-
-        gbc.gridx = 1;
-        gbc.gridy = 6;
+    
+        // Add an informative label at the top of the dialog
+        JLabel infoLabel = new JLabel("Search a property", SwingConstants.CENTER);
+        infoLabel.setForeground(Color.WHITE); // Set label text color to white
+        infoLabel.setFont(new Font("Arial", Font.BOLD, 24)); // Set font style and size
+    
+        gbc.gridwidth = 2; // Span the label across two columns
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        searchDialog.add(infoLabel, gbc); // Add label to dialog
+    
+        gbc.gridwidth = 1; // Reset to one column for the input fields
+        gbc.gridy++; // Move to the next row
+    
+        // Create input fields with consistent design
+        minPriceField = createInputField("Minimum Price:", gbc, searchDialog, gbc.gridy);
+        gbc.gridy++;
+        maxPriceField = createInputField("Maximum Price:", gbc, searchDialog, gbc.gridy);
+        gbc.gridy++;
+        minSqFtField = createInputField("Minimum SqFt:", gbc, searchDialog, gbc.gridy);
+        gbc.gridy++;
+        maxSqFtField = createInputField("Maximum SqFt:", gbc, searchDialog, gbc.gridy);
+        gbc.gridy++;
+        propertyTypeField = createInputField("Property Type:", gbc, searchDialog, gbc.gridy);
+        gbc.gridy++;
+        
+        // Add project name combo box
+        projectNameComboBox = new JComboBox<>(getAllProjectNames());
+        projectNameComboBox.setPreferredSize(new Dimension(200, 30)); // Set size for ComboBox
+        projectNameComboBox.setBackground(Color.WHITE); // ComboBox background color
+        projectNameComboBox.setForeground(Color.BLACK); // ComboBox text color
+        projectNameComboBox.setFont(new Font("Arial", Font.PLAIN, 16)); // Set font for ComboBox
+    
+        addInputField(searchDialog, gbc, "Project Name:", projectNameComboBox, gbc.gridy); // Use ComboBox instead of TextField
+    
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2; // Span button across two columns
         JButton searchButton = new JButton("Search");
+        searchButton.setPreferredSize(new Dimension(200, 40)); // Set button size to match "Add Property" dialog
+        searchButton.setBackground(new Color(23, 76, 124)); // Set button background color to match "Add Property" dialog
+        searchButton.setForeground(Color.WHITE); // Set button text color
+        searchButton.setFont(new Font("Arial", Font.BOLD, 18)); // Match the font style and size
+    
         searchDialog.add(searchButton, gbc);
-
+    
         // Add action listener to search button
         searchButton.addActionListener(e -> searchProperties());
-
+    
         searchDialog.setLocationRelativeTo(this);
         searchDialog.setVisible(true);
     }
-
-    private void addInputField(JDialog dialog, GridBagConstraints gbc, String label, JTextField field, int row) {
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        dialog.add(new JLabel(label), gbc);
-        gbc.gridx = 1;
-        dialog.add(field, gbc);
-    }
-
+    
 // Method to get all unique project names for the ComboBox
     private String[] getAllProjectNames() {
         Set<String> projectNames = new HashSet<>();
@@ -149,10 +195,15 @@ public class HomeFinderApp extends JFrame {
     }
 
 // Overloaded method for adding JComboBox as input field
+// Modify the addInputField method to set the font color to white
     private void addInputField(JDialog dialog, GridBagConstraints gbc, String label, JComboBox<String> comboBox, int row) {
         gbc.gridx = 0;
         gbc.gridy = row;
-        dialog.add(new JLabel(label), gbc);
+        JLabel jLabel = new JLabel(label, SwingConstants.RIGHT);
+        jLabel.setForeground(Color.WHITE); // Set label font color to white
+        jLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Optional: Set the font style and size to match the design
+        dialog.add(jLabel, gbc);
+
         gbc.gridx = 1;
         dialog.add(comboBox, gbc);
     }
@@ -205,21 +256,23 @@ public class HomeFinderApp extends JFrame {
                 "Are you sure you want to buy this property?\n" + property.getDetails(),
                 "Confirm Purchase",
                 JOptionPane.YES_NO_OPTION);
+
         if (confirm == JOptionPane.YES_OPTION) {
-            // Create a transaction record using the Builder pattern
+            // Create a transaction record
             Transaction transaction = new Transaction.Builder()
-                .setProjectName(property.getScheme()) // projectName
-                .setTransactionDate(LocalDate.now()) // transactionDate
-                .setTransactionPrice(property.getPrice()) // transactionPrice
-                .setTransactionSqFt(property.getSqFt()) // transactionSqFt
-                .setSizeSqM(property.getSizeSqM()) // sizeSqM
-                .setPropertyType(property.getPropertyType()) // propertyType
-                .setNoOfFloors(property.getNoOfFloors()) // noOfFloors
-                .setAddress(property.getAddress()) // address
-                .setScheme(property.getScheme()) // scheme
-                .setYear(property.getYear()) // year
-                .setPricePerSqft(property.getPricePerSqft()) // pricePerSqft
-                .build(); // Finalize the Transaction instance
+                    .setProjectName(property.getScheme())
+                    .setTransactionDate(LocalDate.now()) // Use LocalDate
+                    .setTransactionPrice(property.getPrice())
+                    .setTransactionSqFt(property.getSqFt())
+                    .setSizeSqM(property.getSizeSqM())
+                    .setPropertyType(property.getPropertyType())
+                    .setNoOfFloors(property.getNoOfFloors())
+                    .setAddress(property.getAddress())
+                    .setScheme(property.getScheme())
+                    .setYear(property.getYear())
+                    .setPricePerSqft(property.getPricePerSqft())
+                    .build();
+
             try {
                 // Record the transaction
                 fileHandler.writeTransaction(transaction);
@@ -393,42 +446,47 @@ public class HomeFinderApp extends JFrame {
 
     private void openAddPropertyDialog() {
         JDialog addDialog = new JDialog(this, "Add New Property", true);
-        addDialog.setSize(400, 500);
-
+        addDialog.setSize(400, 600);
         addDialog.setLayout(new GridBagLayout());
+        addDialog.getContentPane().setBackground(new Color(5, 33, 67)); // Same background color as the main frame
+        addDialog.setResizable(false); // Make the dialog size fixed
+        JLabel titleLabel = new JLabel("Add New Property", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE); // Set title font color to white
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10); // Adjusted insets for better spacing
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Span across two columns for the title
+        addDialog.add(titleLabel, gbc);
 
-        // Create input fields
-        JTextField sizeSqMField = new JTextField();
-        JTextField sqFtField = new JTextField();
-        JTextField propertyTypeField = new JTextField();
-        JTextField noOfFloorsField = new JTextField();
-        JTextField addressField = new JTextField();
-        JTextField schemeField = new JTextField();
-        JTextField priceField = new JTextField();
-        JTextField yearField = new JTextField();
-        JTextField pricePerSqFtField = new JTextField();
+        gbc.gridwidth = 1; // Reset to one column for input fields
 
-        // Add fields to the dialog
-        addInputField(addDialog, gbc, "Size (sqm):", sizeSqMField, 0);
-        addInputField(addDialog, gbc, "Size (sqft):", sqFtField, 1);
-        addInputField(addDialog, gbc, "Property Type:", propertyTypeField, 2);
-        addInputField(addDialog, gbc, "Number of Floors:", noOfFloorsField, 3);
-        addInputField(addDialog, gbc, "Address:", addressField, 4);
-        addInputField(addDialog, gbc, "Project Name:", schemeField, 5);
-        addInputField(addDialog, gbc, "Price:", priceField, 6);
-        addInputField(addDialog, gbc, "Year:", yearField, 7);
-        addInputField(addDialog, gbc, "Price per sqft:", pricePerSqFtField, 8);
+        // Create input fields with a consistent design
+        JTextField sizeSqMField = createNumericInputField("Size (sqm):", gbc, addDialog, 1);
+        JTextField sqFtField = createNumericInputField("Size (sqft):", gbc, addDialog, 2);
+        JTextField propertyTypeField = createInputField("Property Type:", gbc, addDialog, 3);
+        JTextField noOfFloorsField = createNumericInputField("Number of Floors:", gbc, addDialog, 4);
+        JTextField addressField = createInputField("Address:", gbc, addDialog, 5);
+        JTextField schemeField = createInputField("Project Name:", gbc, addDialog, 6);
+        JTextField priceField = createNumericInputField("Price:", gbc, addDialog, 7);
+        JTextField yearField = createNumericInputField("Year:", gbc, addDialog, 8); // Changed to numeric input field
+        JTextField pricePerSqFtField = createNumericInputField("Price per sqft:", gbc, addDialog, 9);
 
-        gbc.gridx = 1;
-        gbc.gridy = 9;
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Make the button fill horizontally
         JButton addButton = new JButton("Add Property");
+        addButton.setBackground(new Color(23, 76, 124)); // Match the main button color
+        addButton.setForeground(Color.WHITE); // Set button text color to white
+        addButton.setFont(new Font("Arial", Font.BOLD, 18));
+        addButton.setPreferredSize(new Dimension(250, 40));
+        addButton.setFocusPainted(false); // Remove focus painting
+        addButton.setBorder(BorderFactory.createEmptyBorder()); // Remove button border
         addDialog.add(addButton, gbc);
 
-        // Action listener for the add button
         addButton.addActionListener(e -> {
             try {
                 // Gather input data
@@ -439,32 +497,100 @@ public class HomeFinderApp extends JFrame {
                 String address = addressField.getText().trim();
                 String scheme = schemeField.getText().trim();
                 double price = Double.parseDouble(priceField.getText());
-                int year = Integer.parseInt(yearField.getText());
+                int year = Integer.parseInt(yearField.getText()); // Ensure year is numeric
                 double pricePerSqFt = Double.parseDouble(pricePerSqFtField.getText());
-                        // Create new Property using Builder
+
+                // Create new Property using the Builder pattern
                 Property newProperty = new Property.Builder()
-                    .setSizeSqM(sizeSqM)
-                    .setSqFt(sqFt)
-                    .setPropertyType(propertyType)
-                    .setNoOfFloors(noOfFloors)
-                    .setAddress(address)
-                    .setScheme(scheme)
-                    .setPrice(price)
-                    .setYear(year)
-                    .setPricePerSqft(pricePerSqFt)
-                    .build();
+                        .setSizeSqM(sizeSqM)
+                        .setSqFt(sqFt)
+                        .setPropertyType(propertyType)
+                        .setNoOfFloors(noOfFloors)
+                        .setAddress(address)
+                        .setScheme(scheme)
+                        .setPrice(price)
+                        .setYear(year)
+                        .setPricePerSqft(pricePerSqFt)
+                        .build();
+
                 allProperties.add(newProperty);
                 fileHandler.writeProperty(newProperty);
 
                 JOptionPane.showMessageDialog(addDialog, "Property added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 addDialog.dispose(); // Close the dialog
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(addDialog, "Please enter valid numbers.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(addDialog, "Please enter valid numbers in the numeric fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         addDialog.setLocationRelativeTo(this);
         addDialog.setVisible(true);
+    }
+
+    // Helper method to create labeled input fields
+    private JTextField createInputField(String label, GridBagConstraints gbc, JDialog dialog, int row) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel jLabel = new JLabel(label, SwingConstants.RIGHT);
+        jLabel.setForeground(Color.WHITE); // Set label font color to white
+        dialog.add(jLabel, gbc);
+
+        gbc.gridx = 1;
+        JTextField field = new JTextField();
+        field.setPreferredSize(new Dimension(160, 25)); // Set a constant size for the text fields
+        dialog.add(field, gbc);
+
+        return field;
+    }
+
+// Helper method to create numeric input fields
+    private JTextField createNumericInputField(String label, GridBagConstraints gbc, JDialog dialog, int row) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel jLabel = new JLabel(label, SwingConstants.RIGHT);
+        jLabel.setForeground(Color.WHITE); // Set label font color to white
+        dialog.add(jLabel, gbc);
+
+        gbc.gridx = 1;
+        JTextField field = new JTextField();
+        field.setPreferredSize(new Dimension(160, 25)); // Set a constant size for the text fields
+        ((AbstractDocument) field.getDocument()).setDocumentFilter(new NumericDocumentFilter()); // Apply filter
+        dialog.add(field, gbc);
+
+        return field;
+    }
+    // DocumentFilter to allow only numeric input
+
+    class NumericDocumentFilter extends DocumentFilter {
+
+        @Override
+        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            if (string == null) {
+                return;
+            }
+            if (string.matches("\\d*")) { // Allow only digits
+                super.insertString(fb, offset, string, attr);
+            } else {
+                Toolkit.getDefaultToolkit().beep(); // Optional: make a beep sound on invalid input
+            }
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            if (text == null) {
+                return;
+            }
+            if (text.matches("\\d*")) { // Allow only digits
+                super.replace(fb, offset, length, text, attrs);
+            } else {
+                Toolkit.getDefaultToolkit().beep(); // Optional: make a beep sound on invalid input
+            }
+        }
+
+        @Override
+        public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+            super.remove(fb, offset, length);
+        }
     }
 
     private void displayAllProperties() {
