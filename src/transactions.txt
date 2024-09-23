@@ -6790,3 +6790,4 @@ DateOfValuation	Size SqM	SqFt	PropertyType	NoOfFloors	ADDRESS	SCHEME	PRICE	YEAR	
 2024-09-22	1	1	1	1	1	1	1.0	1	1	1.0
 2024-09-22	1	1	1	1	1	1	1.0	1	1	1.0
 2024-09-22	1	1	1	1	1	ahmed	1.0	1	ahmed	1.0
+2024-09-23	150	1615	Serviced Residence	25	Icon City	Kelana Jaya	850000.0	2019	Kelana Jaya	526.0

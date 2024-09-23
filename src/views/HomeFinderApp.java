@@ -2,7 +2,7 @@ package views;
 
 import controllers.FileHandler;
 import models.Property;
-import models.Transaction; 
+import models.Transaction;
 
 import javax.swing.*;
 
@@ -50,14 +50,15 @@ public class HomeFinderApp extends JFrame {
     private JTextArea resultArea;
     private JComboBox<String> projectNameComboBox; // Dropdown for project names
 
-
     private FileHandler fileHandler;
     private List<Property> allProperties;
 
     public HomeFinderApp() {
         // call FileHandler instance and read properties
-        fileHandler = FileHandler.getInstance(); 
-        fileHandler.initializeFile();
+        fileHandler = FileHandler.getInstance();
+        fileHandler.initializeFile("properties.csv");
+        fileHandler.initializeFile("transactions.txt");
+
         allProperties = fileHandler.readProperties();
 
         // Set up the main frame
@@ -121,13 +122,13 @@ public class HomeFinderApp extends JFrame {
         // Create and display the Property Search UI
         JDialog searchDialog = new JDialog(this, "Property Search", true);
         searchDialog.setSize(400, 500);
-        
+
         searchDialog.setLayout(new GridBagLayout());
-    
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-    
+
         // Create input fields
         minPriceField = new JTextField();
         maxPriceField = new JTextField();
@@ -135,7 +136,7 @@ public class HomeFinderApp extends JFrame {
         maxSqFtField = new JTextField();
         propertyTypeField = new JTextField();
         projectNameComboBox = new JComboBox<>(getAllProjectNames()); // Initialize the ComboBox with project names
-    
+
         // Add components to the dialog
         addInputField(searchDialog, gbc, "Minimum Price:", minPriceField, 0);
         addInputField(searchDialog, gbc, "Maximum Price:", maxPriceField, 1);
@@ -143,19 +144,19 @@ public class HomeFinderApp extends JFrame {
         addInputField(searchDialog, gbc, "Maximum SqFt:", maxSqFtField, 3);
         addInputField(searchDialog, gbc, "Property Type:", propertyTypeField, 4);
         addInputField(searchDialog, gbc, "Project Name:", projectNameComboBox, 5); // Use ComboBox instead of TextField
-    
+
         gbc.gridx = 1;
         gbc.gridy = 6;
         JButton searchButton = new JButton("Search");
         searchDialog.add(searchButton, gbc);
-    
+
         // Add action listener to search button
         searchButton.addActionListener(e -> searchProperties());
-    
+
         searchDialog.setLocationRelativeTo(this);
         searchDialog.setVisible(true);
     }
-    
+
     private void addInputField(JDialog dialog, GridBagConstraints gbc, String label, JTextField field, int row) {
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -165,72 +166,72 @@ public class HomeFinderApp extends JFrame {
     }
 
 // Method to get all unique project names for the ComboBox
-private String[] getAllProjectNames() {
-    Set<String> projectNames = new HashSet<>();
-    for (Property property : allProperties) {
-        projectNames.add(property.getScheme());
+    private String[] getAllProjectNames() {
+        Set<String> projectNames = new HashSet<>();
+        for (Property property : allProperties) {
+            projectNames.add(property.getScheme());
+        }
+        return projectNames.toArray(new String[0]);
     }
-    return projectNames.toArray(new String[0]);
-}
 
 // Overloaded method for adding JComboBox as input field
-private void addInputField(JDialog dialog, GridBagConstraints gbc, String label, JComboBox<String> comboBox, int row) {
-    gbc.gridx = 0;
-    gbc.gridy = row;
-    dialog.add(new JLabel(label), gbc);
-    gbc.gridx = 1;
-    dialog.add(comboBox, gbc);
-}
-
-private void searchProperties() {
-    try {
-        // Set default values
-        double minPrice = Double.MIN_VALUE;
-        double maxPrice = Double.MAX_VALUE;
-        int minSqFt = Integer.MIN_VALUE;
-        int maxSqFt = Integer.MAX_VALUE;
-
-        String minPriceInput = minPriceField.getText().trim();
-        if (!minPriceInput.isEmpty()) {
-            minPrice = Double.parseDouble(minPriceInput);
-        }
-
-        String maxPriceInput = maxPriceField.getText().trim();
-        if (!maxPriceInput.isEmpty()) {
-            maxPrice = Double.parseDouble(maxPriceInput);
-        }
-
-        String minSqFtInput = minSqFtField.getText().trim();
-        if (!minSqFtInput.isEmpty()) {
-            minSqFt = Integer.parseInt(minSqFtInput);
-        }
-
-        String maxSqFtInput = maxSqFtField.getText().trim();
-        if (!maxSqFtInput.isEmpty()) {
-            maxSqFt = Integer.parseInt(maxSqFtInput);
-        }
-
-        String propertyType = propertyTypeField.getText().trim();
-        String projectName = (String) projectNameComboBox.getSelectedItem(); // Get selected project name
-
-        List<Property> results = filterProperties(allProperties, minSqFt, maxSqFt, minPrice, maxPrice, propertyType, projectName);
-
-        if (results.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No properties found that match your criteria.", "No Results", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            displaySearchResults(results);
-        }
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Please enter valid numbers for price and square footage.", "Input Error", JOptionPane.ERROR_MESSAGE);
+    private void addInputField(JDialog dialog, GridBagConstraints gbc, String label, JComboBox<String> comboBox, int row) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        dialog.add(new JLabel(label), gbc);
+        gbc.gridx = 1;
+        dialog.add(comboBox, gbc);
     }
-}
+
+    private void searchProperties() {
+        try {
+            // Set default values
+            double minPrice = Double.MIN_VALUE;
+            double maxPrice = Double.MAX_VALUE;
+            int minSqFt = Integer.MIN_VALUE;
+            int maxSqFt = Integer.MAX_VALUE;
+
+            String minPriceInput = minPriceField.getText().trim();
+            if (!minPriceInput.isEmpty()) {
+                minPrice = Double.parseDouble(minPriceInput);
+            }
+
+            String maxPriceInput = maxPriceField.getText().trim();
+            if (!maxPriceInput.isEmpty()) {
+                maxPrice = Double.parseDouble(maxPriceInput);
+            }
+
+            String minSqFtInput = minSqFtField.getText().trim();
+            if (!minSqFtInput.isEmpty()) {
+                minSqFt = Integer.parseInt(minSqFtInput);
+            }
+
+            String maxSqFtInput = maxSqFtField.getText().trim();
+            if (!maxSqFtInput.isEmpty()) {
+                maxSqFt = Integer.parseInt(maxSqFtInput);
+            }
+
+            String propertyType = propertyTypeField.getText().trim();
+            String projectName = (String) projectNameComboBox.getSelectedItem(); // Get selected project name
+
+            List<Property> results = filterProperties(allProperties, minSqFt, maxSqFt, minPrice, maxPrice, propertyType, projectName);
+
+            if (results.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No properties found that match your criteria.", "No Results", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                displaySearchResults(results);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter valid numbers for price and square footage.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private void buyProperty(Property property, JDialog resultsDialog) {
         int confirm = JOptionPane.showConfirmDialog(this,
                 "Are you sure you want to buy this property?\n" + property.getDetails(),
                 "Confirm Purchase",
                 JOptionPane.YES_NO_OPTION);
-    
+
         if (confirm == JOptionPane.YES_OPTION) {
             // Create a transaction record
             Transaction transaction = new Transaction(
@@ -246,19 +247,19 @@ private void searchProperties() {
                     property.getYear(), // year
                     property.getPricePerSqft() // pricePerSqft
             );
-    
+
             try {
                 // Record the transaction
                 fileHandler.writeTransaction(transaction);
-    
+
                 // Remove the purchased property from the list
                 allProperties.remove(property);
-    
+
                 // Update the properties file
                 fileHandler.updatePropertiesFile(allProperties);
-    
+
                 JOptionPane.showMessageDialog(this, "Property purchased successfully!\nTransaction recorded.", "Success", JOptionPane.INFORMATION_MESSAGE);
-    
+
                 // Close the results dialog if it's not null
                 if (resultsDialog != null) {
                     resultsDialog.dispose();
@@ -268,7 +269,7 @@ private void searchProperties() {
             }
         }
     }
-    
+
 // Method to display the search results
     private void displaySearchResults(List<Property> results) {
         JDialog resultsDialog = new JDialog(this, "Search Results", true);
@@ -316,13 +317,13 @@ private void searchProperties() {
         panel.setPreferredSize(new Dimension(800, 250)); // Adjusted size for the panel
         panel.setBorder(BorderFactory.createLineBorder(new Color(5, 33, 67), 2)); // Dark blue border
         panel.setBackground(new Color(230, 240, 255)); // Light blue background for property panel
-    
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10); // Increase insets for better spacing
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-    
+
         // Load image for property
         JLabel imageLabel = new JLabel();
         ImageIcon propertyImage = loadImage(property.getScheme());
@@ -330,51 +331,51 @@ private void searchProperties() {
         imageLabel.setPreferredSize(new Dimension(200, 200)); // Increase image size
         gbc.gridheight = 6; // Span image over multiple rows
         panel.add(imageLabel, gbc);
-    
+
         gbc.gridheight = 1; // Reset grid height
         gbc.gridx = 1; // Move to the next column
-    
+
         // Project Name
         JLabel projectNameLabel = new JLabel("Project: " + property.getScheme());
         projectNameLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Increase font size
         panel.add(projectNameLabel, gbc);
-    
+
         // Location
         gbc.gridy++;
         JLabel locationLabel = new JLabel("Location: " + property.getAddress());
         locationLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Increase font size
         panel.add(locationLabel, gbc);
-    
+
         // Size
         gbc.gridy++;
         JLabel sizeLabel = new JLabel("Size: " + property.getSqFt() + " SqFt (" + property.getSizeSqM() + " SqM)");
         sizeLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Increase font size
         panel.add(sizeLabel, gbc);
-    
+
         // Number of Floors
         gbc.gridy++;
         JLabel floorsLabel = new JLabel("Number of Floors: " + property.getNoOfFloors());
         floorsLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Increase font size
         panel.add(floorsLabel, gbc);
-    
+
         // Price
         gbc.gridy++;
         JLabel priceLabel = new JLabel("Price: $" + String.format("%.1f", property.getPrice()));
         priceLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Increase font size
         panel.add(priceLabel, gbc);
-    
+
         // Year
         gbc.gridy++;
         JLabel yearLabel = new JLabel("Year: " + property.getYear());
         yearLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Increase font size
         panel.add(yearLabel, gbc);
-    
+
         // Price per SqFt
         gbc.gridy++;
         JLabel pricePerSqFtLabel = new JLabel("Price per Sq Ft: $" + String.format("%.1f", property.getPricePerSqft()));
         pricePerSqFtLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Increase font size
         panel.add(pricePerSqFtLabel, gbc);
-    
+
         // Add Buy Button
         gbc.gridy++;
         JButton buyButton = new JButton("Buy");
@@ -384,10 +385,10 @@ private void searchProperties() {
         buyButton.setFont(new Font("Arial", Font.BOLD, 16)); // Increase font size for button
         buyButton.addActionListener(e -> buyProperty(property, null)); // Pass null for now, can handle dialog refresh if needed
         panel.add(buyButton, gbc);
-    
+
         return panel;
     }
-    
+
     // Method to load an image for the property based on the scheme or project name
     private ImageIcon loadImage(String scheme) {
         String imagePath = "images/" + scheme.toLowerCase().replace(" ", "_") + ".jpg"; // Image path based on scheme name
@@ -493,23 +494,23 @@ private void searchProperties() {
             propertiesDialog.setSize(750, 600);
             propertiesDialog.setLayout(new BorderLayout());
             propertiesDialog.setLocationRelativeTo(this);
-    
+
             // Container for all property panels
             JPanel propertiesPanel = new JPanel();
             propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
             propertiesPanel.setBackground(new Color(210, 225, 240)); // Light blue background
-    
+
             for (Property property : allProperties) {
                 JPanel propertyPanel = createPropertyPanel(property);
                 propertiesPanel.add(propertyPanel);
                 propertiesPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer between panels
             }
-    
+
             // Scroll pane for the properties panel
             JScrollPane scrollPane = new JScrollPane(propertiesPanel);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    
+
             // Back button
             JPanel buttonPanel = new JPanel();
             buttonPanel.setBackground(new Color(5, 33, 67)); // Dark blue background
@@ -521,14 +522,14 @@ private void searchProperties() {
             backButton.setFocusPainted(false);
             backButton.addActionListener(e -> propertiesDialog.dispose());
             buttonPanel.add(backButton);
-    
+
             propertiesDialog.add(scrollPane, BorderLayout.CENTER);
             propertiesDialog.add(buttonPanel, BorderLayout.SOUTH);
-    
+
             propertiesDialog.setVisible(true);
         }
     }
-    
+
     public static List<Transaction> filterTransactionsByProjectName(List<Transaction> transactions, String projectName) {
         List<Transaction> filteredTransactions = new ArrayList<>();
         for (Transaction transaction : transactions) {

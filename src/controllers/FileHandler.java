@@ -1,8 +1,5 @@
 package controllers;
-import models.Property;
-import models.Transaction; 
 
-import java.util.List;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,21 +9,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Property;
+import models.Transaction;
+
 public class FileHandler {
 
     private static final String FILE_PATH = "properties.csv";
     private static final String TRANSACTION_FILE_PATH = "transactions.txt";
 
-    private FileHandler() {};
-    // Singleton Design Pattern
-    private static FileHandler instance;
+    // Singleton instance
+    private static volatile FileHandler instance;
+
+    // Private constructor to prevent instantiation
+    private FileHandler() {
+        // Optional: Initialize files if they don't exist
+        initializeFile(FILE_PATH);
+        initializeFile(TRANSACTION_FILE_PATH);
+    }
+
+    // Static method to provide access to the single instance
     public static FileHandler getInstance() {
         if (instance == null) {
-            instance = new FileHandler();
-        } 
+            synchronized (FileHandler.class) {
+                if (instance == null) {
+                    instance = new FileHandler();
+                }
+            }
+        }
         return instance;
     }
-    
+
     // Read properties from the file
     public List<Property> readProperties() {
         List<Property> properties = new ArrayList<>();
@@ -86,12 +98,17 @@ public class FileHandler {
     }
 
     // Initialize the file with a header if not present
-    public void initializeFile() {
-        File file = new File(FILE_PATH);
+    public  void initializeFile(String filePath) {
+        File file = new File(filePath);
         if (!file.exists()) {
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
-                // Writing header
-                bw.write("SizeSqM,SqFt,PropertyType,NoOfFloors,Address,Scheme,Price,Year,PricePerSqft");
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                if (filePath.equals(FILE_PATH)) {
+                    // Writing header for properties file
+                    bw.write("SizeSqM,SqFt,PropertyType,NoOfFloors,Address,Scheme,Price,Year,PricePerSqft");
+                } else if (filePath.equals(TRANSACTION_FILE_PATH)) {
+                    // Writing header for transactions file
+                    bw.write("Date\tSizeSqM\tSizeSqFt\tPropertyType\tNoOfFloors\tAddress\tScheme\tPrice\tYear\tProjectName\tPricePerSqft");
+                }
                 bw.newLine();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -102,7 +119,6 @@ public class FileHandler {
     // Read transactions from the file
     public List<Transaction> loadTransactions() {
         List<Transaction> transactions = new ArrayList<>();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(TRANSACTION_FILE_PATH))) {
             skipHeader(reader);
             String line;

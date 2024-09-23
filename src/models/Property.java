@@ -108,7 +108,6 @@ public class Property {
     }
 
     // Method to display property details
-    // Method to return property details as a string
     public void displayPropertyDetails() {
         System.out.println("Property Type: " + propertyType);
         System.out.println("Size: " + sqFt + " SqFt (" + sizeSqM + " SqM)");
