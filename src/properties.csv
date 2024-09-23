@@ -3,3 +3,4 @@ SizeSqM,SqFt,PropertyType,NoOfFloors,Address,Scheme,Price,Year,PricePerSqft
 200,2153,Double-Storey Terrace,2,Taman Tun Dr Ismail,Kuala Lumpur,1000000.0,2010,464.0
 90,968,Apartment,5,Desa Pandan,Setiawangsa,350000.0,2008,361.0
 250,2691,Bungalow,2,Bukit Jelutong,Shah Alam,2000000.0,2012,743.0
+1000,1,APARTMENT,2,123,ahmed,1000000.0,1,100.0

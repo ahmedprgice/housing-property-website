@@ -12,22 +12,85 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 import models.Property;
 import models.Transaction;
+import models.User;
 
 public class FileHandler {
 
+    private static final String USER_FILE_PATH = "users.txt";
     private static final String FILE_PATH = "properties.csv";
     private static final String TRANSACTION_FILE_PATH = "transactions.txt";
 
     private static final DateTimeFormatter[] DATE_FORMATTERS = {
-    DateTimeFormatter.ofPattern("d/M/yyyy"),
-    DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-    DateTimeFormatter.ISO_LOCAL_DATE 
-};
+        DateTimeFormatter.ofPattern("d/M/yyyy"),
+        DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+        DateTimeFormatter.ISO_LOCAL_DATE
+    };
 
     // Singleton instance
     private static volatile FileHandler instance;
+
+    public void saveUser(User user) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(USER_FILE_PATH, true))) {
+            String line = String.join(",",
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getEmail(),
+                    user.getRole().name() // Save role as a string
+            );
+            bw.write(line);
+            bw.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Method to load all users from file
+    public List<User> loadUsers() {
+        List<User> users = new ArrayList<>();
+        File file = new File(USER_FILE_PATH);
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(USER_FILE_PATH))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] details = line.split(",");
+                    if (details.length == 4) {
+                        try {
+                            User.Role role = User.Role.valueOf(details[3].toUpperCase().trim());
+                            User user = new User(details[0].trim(), details[1].trim(), details[2].trim(), role);
+                            users.add(user);
+                            System.out.println("Loaded user: " + user.getUsername() + ", Role: " + user.getRole()); // Debug
+                        } catch (IllegalArgumentException e) {
+                            System.err.println("Invalid role for user: " + details[0] + ". Skipping user.");
+                        }
+                    } else {
+                        System.err.println("Incorrect number of fields for user: " + line + ". Skipping user.");
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return users;
+    }
+
+    // Method to authenticate user login
+    public User authenticateUser(String username, String password) {
+        List<User> users = loadUsers();
+        System.out.println("Attempting to authenticate: " + username + " / " + password); // Debug
+
+        for (User user : users) {
+            System.out.println("Checking user: " + user.getUsername() + " / " + user.getPassword()); // Debug
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                System.out.println("Authenticated: " + username); // Debug
+                return user;
+            }
+        }
+        System.out.println("Authentication failed for: " + username); // Debug
+        return null; // Return null if no match found
+    }
 
     // Private constructor to prevent instantiation
     private FileHandler() {
@@ -73,18 +136,18 @@ public class FileHandler {
                     int year = Integer.parseInt(details[7].trim());
                     double pricePerSqft = Double.parseDouble(details[8].trim());
 
-                        // Create Property using Builder
+                    // Create Property using Builder
                     Property property = new Property.Builder()
-                        .setSizeSqM(sizeSqM)
-                        .setSqFt(sqFt)
-                        .setPropertyType(propertyType)
-                        .setNoOfFloors(noOfFloors)
-                        .setAddress(address)
-                        .setScheme(scheme)
-                        .setPrice(price)
-                        .setYear(year)
-                        .setPricePerSqft(pricePerSqft)
-                        .build();
+                            .setSizeSqM(sizeSqM)
+                            .setSqFt(sqFt)
+                            .setPropertyType(propertyType)
+                            .setNoOfFloors(noOfFloors)
+                            .setAddress(address)
+                            .setScheme(scheme)
+                            .setPrice(price)
+                            .setYear(year)
+                            .setPricePerSqft(pricePerSqft)
+                            .build();
                     properties.add(property);
                 } catch (NumberFormatException e) {
                     System.out.println("Error parsing line: " + line + ". Error: " + e.getMessage());
@@ -118,7 +181,7 @@ public class FileHandler {
     }
 
     // Initialize the file with a header if not present
-    public  void initializeFile(String filePath) {
+    public void initializeFile(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
@@ -186,18 +249,18 @@ public class FileHandler {
 
             // Use the Builder to create a Transaction instance
             return new Transaction.Builder()
-                .setProjectName(projectName)
-                .setTransactionDate(transactionDate)
-                .setTransactionPrice(price)
-                .setTransactionSqFt(sizeSqFt)
-                .setSizeSqM(0) // Set this to an appropriate value if needed
-                .setPropertyType("") // Set to an appropriate value if needed
-                .setNoOfFloors(0) // Set to an appropriate value if needed
-                .setAddress(address)
-                .setScheme("") // Set to an appropriate value if needed
-                .setYear(0) // Set to an appropriate value if needed
-                .setPricePerSqft(0.0) // Set to an appropriate value if needed
-                .build();
+                    .setProjectName(projectName)
+                    .setTransactionDate(transactionDate)
+                    .setTransactionPrice(price)
+                    .setTransactionSqFt(sizeSqFt)
+                    .setSizeSqM(0) // Set this to an appropriate value if needed
+                    .setPropertyType("") // Set to an appropriate value if needed
+                    .setNoOfFloors(0) // Set to an appropriate value if needed
+                    .setAddress(address)
+                    .setScheme("") // Set to an appropriate value if needed
+                    .setYear(0) // Set to an appropriate value if needed
+                    .setPricePerSqft(0.0) // Set to an appropriate value if needed
+                    .build();
 
         } catch (NumberFormatException e) {
             System.err.println("Error parsing transaction from line: " + line + " - " + e.getMessage());
