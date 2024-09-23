@@ -3,6 +3,7 @@ package views;
 import controllers.FileHandler;
 import java.awt.*;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -204,23 +205,21 @@ public class HomeFinderApp extends JFrame {
                 "Are you sure you want to buy this property?\n" + property.getDetails(),
                 "Confirm Purchase",
                 JOptionPane.YES_NO_OPTION);
-
         if (confirm == JOptionPane.YES_OPTION) {
-            // Create a transaction record
-            Transaction transaction = new Transaction(
-                    property.getScheme(), // projectName
-                    java.time.LocalDate.now(), // transactionDate
-                    property.getPrice(), // transactionPrice
-                    property.getSqFt(), // transactionSqFt
-                    property.getSizeSqM(), // sizeSqM
-                    property.getPropertyType(), // propertyType
-                    property.getNoOfFloors(), // noOfFloors
-                    property.getAddress(), // address
-                    property.getScheme(), // scheme
-                    property.getYear(), // year
-                    property.getPricePerSqft() // pricePerSqft
-            );
-
+            // Create a transaction record using the Builder pattern
+            Transaction transaction = new Transaction.Builder()
+                .setProjectName(property.getScheme()) // projectName
+                .setTransactionDate(LocalDate.now()) // transactionDate
+                .setTransactionPrice(property.getPrice()) // transactionPrice
+                .setTransactionSqFt(property.getSqFt()) // transactionSqFt
+                .setSizeSqM(property.getSizeSqM()) // sizeSqM
+                .setPropertyType(property.getPropertyType()) // propertyType
+                .setNoOfFloors(property.getNoOfFloors()) // noOfFloors
+                .setAddress(property.getAddress()) // address
+                .setScheme(property.getScheme()) // scheme
+                .setYear(property.getYear()) // year
+                .setPricePerSqft(property.getPricePerSqft()) // pricePerSqft
+                .build(); // Finalize the Transaction instance
             try {
                 // Record the transaction
                 fileHandler.writeTransaction(transaction);

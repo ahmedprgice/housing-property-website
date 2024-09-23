@@ -16,19 +16,19 @@ public class Transaction {
     private int year;
     private double pricePerSqft;
 
-    public Transaction(String projectName, LocalDate transactionDate, double transactionPrice, int transactionSqFt,
-                       int sizeSqM, String propertyType, int noOfFloors, String address, String scheme, int year, double pricePerSqft) {
-        this.projectName = projectName;
-        this.transactionDate = transactionDate;
-        this.transactionPrice = transactionPrice;
-        this.transactionSqFt = transactionSqFt;
-        this.sizeSqM = sizeSqM;
-        this.propertyType = propertyType;
-        this.noOfFloors = noOfFloors;
-        this.address = address;
-        this.scheme = scheme;
-        this.year = year;
-        this.pricePerSqft = pricePerSqft;
+    // Constructor
+    private Transaction(Builder builder) {
+        this.projectName = builder.projectName;
+        this.transactionDate = builder.transactionDate;
+        this.transactionPrice = builder.transactionPrice;
+        this.transactionSqFt = builder.transactionSqFt;
+        this.sizeSqM = builder.sizeSqM;
+        this.propertyType = builder.propertyType;
+        this.noOfFloors = builder.noOfFloors;
+        this.address = builder.address;
+        this.scheme = builder.scheme;
+        this.year = builder.year;
+        this.pricePerSqft = builder.pricePerSqft;
     }
 
     // Getters
@@ -43,6 +43,82 @@ public class Transaction {
     public String getScheme() { return scheme; }            // Getter for scheme
     public int getYear() { return year; }                    // Getter for year
     public double getPricePerSqft() { return pricePerSqft; } // Getter for pricePerSqft
+
+
+    // Builder class
+    public static class Builder {
+        private String projectName;
+        private LocalDate transactionDate;
+        private double transactionPrice;
+        private int transactionSqFt;
+        private int sizeSqM;
+        private String propertyType;
+        private int noOfFloors;
+        private String address;
+        private String scheme;
+        private int year;
+        private double pricePerSqft;
+
+        public Builder setProjectName(String projectName) {
+            this.projectName = projectName;
+            return this;
+        }
+
+        public Builder setTransactionDate(LocalDate transactionDate) {
+            this.transactionDate = transactionDate;
+            return this;
+        }
+
+        public Builder setTransactionPrice(double transactionPrice) {
+            this.transactionPrice = transactionPrice;
+            return this;
+        }
+
+        public Builder setTransactionSqFt(int transactionSqFt) {
+            this.transactionSqFt = transactionSqFt;
+            return this;
+        }
+
+        public Builder setSizeSqM(int sizeSqM) {
+            this.sizeSqM = sizeSqM;
+            return this;
+        }
+
+        public Builder setPropertyType(String propertyType) {
+            this.propertyType = propertyType;
+            return this;
+        }
+
+        public Builder setNoOfFloors(int noOfFloors) {
+            this.noOfFloors = noOfFloors;
+            return this;
+        }
+
+        public Builder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder setScheme(String scheme) {
+            this.scheme = scheme;
+            return this;
+        }
+
+        public Builder setYear(int year) {
+            this.year = year;
+            return this;
+        }
+
+        public Builder setPricePerSqft(double pricePerSqft) {
+            this.pricePerSqft = pricePerSqft;
+            return this;
+        }
+
+        public Transaction build() {
+            return new Transaction(this);
+        }
+    }
+
 
     // Display transaction details
     public void displayTransactionDetails() {

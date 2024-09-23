@@ -184,7 +184,20 @@ public class FileHandler {
 
             LocalDate transactionDate = parseTransactionDate(dateStr);
 
-            return new Transaction(projectName, transactionDate, price, sizeSqFt, 0, "", 0, address, "", 0, 0.0);
+            // Use the Builder to create a Transaction instance
+            return new Transaction.Builder()
+                .setProjectName(projectName)
+                .setTransactionDate(transactionDate)
+                .setTransactionPrice(price)
+                .setTransactionSqFt(sizeSqFt)
+                .setSizeSqM(0) // Set this to an appropriate value if needed
+                .setPropertyType("") // Set to an appropriate value if needed
+                .setNoOfFloors(0) // Set to an appropriate value if needed
+                .setAddress(address)
+                .setScheme("") // Set to an appropriate value if needed
+                .setYear(0) // Set to an appropriate value if needed
+                .setPricePerSqft(0.0) // Set to an appropriate value if needed
+                .build();
 
         } catch (NumberFormatException e) {
             System.err.println("Error parsing transaction from line: " + line + " - " + e.getMessage());

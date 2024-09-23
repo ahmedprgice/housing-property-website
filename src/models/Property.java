@@ -100,7 +100,7 @@ public class Property {
         this.pricePerSqft = pricePerSqft;
     }
 
-        // Builder class
+    // Builder class
     public static class Builder {
         private int sizeSqM;
         private int sqFt;
@@ -112,15 +112,50 @@ public class Property {
         private int year;
         private double pricePerSqft;
 
-        public Builder setSizeSqM(int sizeSqM) { this.sizeSqM = sizeSqM; return this; }
-        public Builder setSqFt(int sqFt) { this.sqFt = sqFt; return this; }
-        public Builder setPropertyType(String propertyType) { this.propertyType = propertyType; return this; }
-        public Builder setNoOfFloors(int noOfFloors) { this.noOfFloors = noOfFloors; return this; }
-        public Builder setAddress(String address) { this.address = address; return this; }
-        public Builder setScheme(String scheme) { this.scheme = scheme; return this; }
-        public Builder setPrice(double price) { this.price = price; return this; }
-        public Builder setYear(int year) { this.year = year; return this; }
-        public Builder setPricePerSqft(double pricePerSqft) { this.pricePerSqft = pricePerSqft; return this; }
+        public Builder setSizeSqM(int sizeSqM) {
+            this.sizeSqM = sizeSqM;
+            return this;
+        }
+
+        public Builder setSqFt(int sqFt) {
+            this.sqFt = sqFt;
+            return this;
+        }
+
+        public Builder setPropertyType(String propertyType) {
+            this.propertyType = propertyType;
+            return this;
+        }
+
+        public Builder setNoOfFloors(int noOfFloors) {
+            this.noOfFloors = noOfFloors;
+            return this;
+        }
+
+        public Builder setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public Builder setScheme(String scheme) {
+            this.scheme = scheme;
+            return this;
+        }
+
+        public Builder setPrice(double price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder setYear(int year) {
+            this.year = year;
+            return this;
+        }
+
+        public Builder setPricePerSqft(double pricePerSqft) {
+            this.pricePerSqft = pricePerSqft;
+            return this;
+        }
 
         public Property build() {
             return new Property(this);
