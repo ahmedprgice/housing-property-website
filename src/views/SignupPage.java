@@ -1,3 +1,5 @@
+package views;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -118,6 +120,10 @@ public class SignupPage extends JFrame {
             fileHandler.saveUser(newUser);
             messageLabel.setText("Signup successful! User saved.");
             messageLabel.setForeground(new Color(46, 204, 113));
+
+            // Redirect to LoginPage after successful signup
+            new LoginPage(); // Create a new instance of LoginPage
+            this.dispose(); // Close the signup window
         }
     }
 

@@ -28,16 +28,18 @@ public class LoginPage extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Title Label
         JLabel titleLabel = new JLabel("Login", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.WHITE);
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 2; // Span across two columns
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(titleLabel, gbc);
 
-        gbc.gridwidth = 1;
+        gbc.gridwidth = 1; // Reset to single column for the following components
 
+        // Username Label and Field
         gbc.gridx = 0;
         gbc.gridy = 1;
         JLabel usernameLabel = new JLabel("Username:");
@@ -48,6 +50,7 @@ public class LoginPage extends JFrame {
         usernameField = new JTextField(15);
         add(usernameField, gbc);
 
+        // Password Label and Field
         gbc.gridx = 0;
         gbc.gridy = 2;
         JLabel passwordLabel = new JLabel("Password:");
@@ -58,6 +61,7 @@ public class LoginPage extends JFrame {
         passwordField = new JPasswordField(15);
         add(passwordField, gbc);
 
+        // Login Button
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
@@ -68,39 +72,42 @@ public class LoginPage extends JFrame {
         loginButton.setFocusPainted(false);
         add(loginButton, gbc);
 
+        // Message Label for feedback
         gbc.gridy = 4;
         messageLabel = new JLabel("", SwingConstants.CENTER);
         messageLabel.setForeground(Color.WHITE);
         add(messageLabel, gbc);
 
+        // Action Listener for the login button
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                authenticate();
+                authenticate(); // Call authenticate method
             }
         });
 
-        setLocationRelativeTo(null);
-        setVisible(true);
+        // Set window properties
+        setLocationRelativeTo(null); // Center the window
+        setVisible(true); // Show the window
     }
 
     private void authenticate() {
-        String username = usernameField.getText().trim(); // Remove leading/trailing spaces
-        String password = new String(passwordField.getPassword()).trim(); // Remove leading/trailing spaces
-    
-        User user = fileHandler.authenticateUser(username, password);
+        String username = usernameField.getText().trim(); // Get username
+        String password = new String(passwordField.getPassword()).trim(); // Get password
+
+        User user = fileHandler.authenticateUser(username, password); // Authenticate user
         if (user != null) {
             messageLabel.setText("Login successful!");
             messageLabel.setForeground(new Color(46, 204, 113));
-            new HomeFinderApp(user).setVisible(true); // Pass the authenticated user object
+            new HomeFinderApp(user).setVisible(true); // Open home app with user info
             this.dispose(); // Close the login window
         } else {
             messageLabel.setText("Invalid username or password.");
-            messageLabel.setForeground(new Color(231, 76, 60));
+            messageLabel.setForeground(new Color(231, 76, 60)); // Set error message color
         }
     }
     
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginPage());
+        SwingUtilities.invokeLater(() -> new LoginPage()); // Launch the LoginPage
     }
 }
