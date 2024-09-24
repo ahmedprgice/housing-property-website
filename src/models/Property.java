@@ -32,72 +32,36 @@ public class Property {
         return sizeSqM;
     }
 
-    public void setSizeSqM(int sizeSqM) {
-        this.sizeSqM = sizeSqM;
-    }
-
     public int getSqFt() {
         return sqFt;
-    }
-
-    public void setSqFt(int sqFt) {
-        this.sqFt = sqFt;
     }
 
     public String getPropertyType() {
         return propertyType;
     }
 
-    public void setPropertyType(String propertyType) {
-        this.propertyType = propertyType;
-    }
-
     public int getNoOfFloors() {
         return noOfFloors;
-    }
-
-    public void setNoOfFloors(int noOfFloors) {
-        this.noOfFloors = noOfFloors;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getScheme() {
         return scheme;
-    }
-
-    public void setScheme(String scheme) {
-        this.scheme = scheme;
     }
 
     public double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public int getYear() {
         return year;
     }
 
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public double getPricePerSqft() {
         return pricePerSqft;
-    }
-
-    public void setPricePerSqft(double pricePerSqft) {
-        this.pricePerSqft = pricePerSqft;
     }
 
     // Builder class
