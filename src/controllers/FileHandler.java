@@ -61,7 +61,7 @@ public class FileHandler {
                             User.Role role = User.Role.valueOf(details[3].toUpperCase().trim());
                             User user = new User(details[0].trim(), details[1].trim(), details[2].trim(), role);
                             users.add(user);
-                            System.out.println("Loaded user: " + user.getUsername() + ", Role: " + user.getRole()); // Debug
+                            //System.out.println("Loaded user: " + user.getUsername() + ", Role: " + user.getRole()); // Debug
                         } catch (IllegalArgumentException e) {
                             System.err.println("Invalid role for user: " + details[0] + ". Skipping user.");
                         }
@@ -82,13 +82,13 @@ public class FileHandler {
         System.out.println("Attempting to authenticate: " + username + " / " + password); // Debug
 
         for (User user : users) {
-            System.out.println("Checking user: " + user.getUsername() + " / " + user.getPassword()); // Debug
+            // System.out.println("Checking user: " + user.getUsername() + " / " + user.getPassword()); // Debug
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                System.out.println("Authenticated: " + username); // Debug
+              //  System.out.println("Authenticated: " + username); // Debug
                 return user;
             }
         }
-        System.out.println("Authentication failed for: " + username); // Debug
+       // System.out.println("Authentication failed for: " + username); // Debug
         return null; // Return null if no match found
     }
 
