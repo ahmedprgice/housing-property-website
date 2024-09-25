@@ -3,7 +3,7 @@ malak,123,malak@gmail.com,SELLER
 HHH,123,hhh@gmail.com,SELLER
 a,123,a@gmail.com,SELLER
 f,123,f@gmail.com,BUYER
-sd,123,dfsfsd@gmail.com,SELLER
+
 sd,123,dfsfsd@gmail.com,BUYER
 sd,123,dfsfsd@gmail.com,BUYER
 sd,123,dfsfsd@gmail.com,BUYER

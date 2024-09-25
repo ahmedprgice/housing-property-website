@@ -1,4 +1,5 @@
 package views;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -41,6 +42,7 @@ import models.Transaction;
 import models.User;
 
 public class HomeFinderApp extends JFrame {
+
     private User loggedInUser;
     private FileHandler fileHandler;
     private List<Property> allProperties;
@@ -105,12 +107,12 @@ public class HomeFinderApp extends JFrame {
 
     private void setupSellerUI(GridBagConstraints gbc) {
         JButton addPropertyButton = new JButton("Add New Property");
-    
+
         // Customize button appearance
         Color buttonColor = new Color(23, 76, 124);
         Font buttonFont = new Font("Arial", Font.BOLD, 18);
         JButton[] sellerButtons = {addPropertyButton}; // Removed viewPropertiesButton
-    
+
         for (JButton button : sellerButtons) {
             button.setBackground(buttonColor);
             button.setForeground(Color.WHITE);
@@ -119,27 +121,26 @@ public class HomeFinderApp extends JFrame {
             button.setFocusPainted(false);
             button.setBorder(BorderFactory.createEmptyBorder());
         }
-    
+
         // Action listeners for Seller buttons
         addPropertyButton.addActionListener(e -> openAddPropertyDialog());
-    
+
         // Add Seller-specific buttons to the frame
         gbc.gridy++;
         add(addPropertyButton, gbc);
-    
-      
+
     }
-    
+
     private void setupBuyerUI(GridBagConstraints gbc) {
         JButton searchPropertiesButton = new JButton("Search for Properties");
         JButton viewTransactionsButton = new JButton("View Project Transactions");
         JButton displayAllPropertiesButton = new JButton("Display All Properties"); // New button
-    
+
         // Customize button appearance
         Color buttonColor = new Color(23, 76, 124);
         Font buttonFont = new Font("Arial", Font.BOLD, 18);
         JButton[] buyerButtons = {searchPropertiesButton, viewTransactionsButton, displayAllPropertiesButton};
-    
+
         for (JButton button : buyerButtons) {
             button.setBackground(buttonColor);
             button.setForeground(Color.WHITE);
@@ -148,66 +149,66 @@ public class HomeFinderApp extends JFrame {
             button.setFocusPainted(false);
             button.setBorder(BorderFactory.createEmptyBorder());
         }
-    
+
         // Action listeners for Buyer buttons
         searchPropertiesButton.addActionListener(e -> openPropertySearchUI());
         viewTransactionsButton.addActionListener(e -> viewBuyerTransactions());
         displayAllPropertiesButton.addActionListener(e -> displayAllProperties()); // New action listener
-    
+
         // Add Buyer-specific buttons to the frame
         gbc.gridy++;
         add(searchPropertiesButton, gbc);
-    
+
         gbc.gridy++;
         add(viewTransactionsButton, gbc);
-    
+
         gbc.gridy++;
         add(displayAllPropertiesButton, gbc); // Add the button to the layout
     }
     // Method to display all properties
-private void displayAllProperties() {
-    JDialog propertiesDialog = new JDialog(this, "All Properties", true);
-    propertiesDialog.setSize(750, 600);
-    propertiesDialog.setLayout(new BorderLayout());
-    propertiesDialog.setLocationRelativeTo(this);
 
-    // Container for all property panels
-    JPanel propertiesPanel = new JPanel();
-    propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
-    propertiesPanel.setBackground(new Color(210, 225, 240)); // Light blue background
+    private void displayAllProperties() {
+        JDialog propertiesDialog = new JDialog(this, "All Properties", true);
+        propertiesDialog.setSize(750, 600);
+        propertiesDialog.setLayout(new BorderLayout());
+        propertiesDialog.setLocationRelativeTo(this);
 
-    // Add each property to the propertiesPanel
-    for (Property property : allProperties) {
-        JPanel propertyPanel = createPropertyPanel(property);
-        propertiesPanel.add(propertyPanel);
-        propertiesPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer between panels
+        // Container for all property panels
+        JPanel propertiesPanel = new JPanel();
+        propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.Y_AXIS));
+        propertiesPanel.setBackground(new Color(210, 225, 240)); // Light blue background
+
+        // Add each property to the propertiesPanel
+        for (Property property : allProperties) {
+            JPanel propertyPanel = createPropertyPanel(property);
+            propertiesPanel.add(propertyPanel);
+            propertiesPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer between panels
+        }
+
+        // Scroll pane for the properties panel
+        JScrollPane scrollPane = new JScrollPane(propertiesPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // Add a close button at the bottom
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(5, 33, 67));
+        JButton closeButton = new JButton("Close");
+        closeButton.setFont(new Font("Arial", Font.BOLD, 16));
+        closeButton.setPreferredSize(new Dimension(100, 40));
+        closeButton.setBackground(new Color(23, 76, 124));
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setFocusPainted(false);
+        closeButton.addActionListener(e -> propertiesDialog.dispose());
+        buttonPanel.add(closeButton);
+
+        // Add scroll pane and button panel to the dialog
+        propertiesDialog.add(scrollPane, BorderLayout.CENTER);
+        propertiesDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        propertiesDialog.setVisible(true);
     }
 
-    // Scroll pane for the properties panel
-    JScrollPane scrollPane = new JScrollPane(propertiesPanel);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-    // Add a close button at the bottom
-    JPanel buttonPanel = new JPanel();
-    buttonPanel.setBackground(new Color(5, 33, 67));
-    JButton closeButton = new JButton("Close");
-    closeButton.setFont(new Font("Arial", Font.BOLD, 16));
-    closeButton.setPreferredSize(new Dimension(100, 40));
-    closeButton.setBackground(new Color(23, 76, 124));
-    closeButton.setForeground(Color.WHITE);
-    closeButton.setFocusPainted(false);
-    closeButton.addActionListener(e -> propertiesDialog.dispose());
-    buttonPanel.add(closeButton);
-
-    // Add scroll pane and button panel to the dialog
-    propertiesDialog.add(scrollPane, BorderLayout.CENTER);
-    propertiesDialog.add(buttonPanel, BorderLayout.SOUTH);
-
-    propertiesDialog.setVisible(true);
-}
-
-    
     // Seller functionality: Open dialog to add a new property
     private void openAddPropertyDialog() {
         JDialog addDialog = new JDialog(this, "Add New Property", true);
@@ -344,6 +345,7 @@ private void displayAllProperties() {
 
         searchButton.addActionListener(e -> {
             try {
+                // Retrieve search inputs
                 double minPrice = Double.parseDouble(minPriceField.getText().isEmpty() ? "0" : minPriceField.getText());
                 double maxPrice = Double.parseDouble(maxPriceField.getText().isEmpty() ? String.valueOf(Double.MAX_VALUE) : maxPriceField.getText());
                 int minSqFt = Integer.parseInt(minSqFtField.getText().isEmpty() ? "0" : minSqFtField.getText());
@@ -351,8 +353,50 @@ private void displayAllProperties() {
                 String propertyType = propertyTypeField.getText().trim();
                 String projectName = (String) projectNameComboBox.getSelectedItem();
 
+                // Filter properties based on criteria
                 List<Property> results = filterProperties(allProperties, minSqFt, maxSqFt, minPrice, maxPrice, propertyType, projectName);
-                displaySearchResults(results);
+
+                // Open a new dialog to show results
+                JDialog resultDialog = new JDialog(this, "Search Results", true);
+                resultDialog.setSize(500, 400);
+                resultDialog.setLayout(new BorderLayout());
+                resultDialog.setLocationRelativeTo(this);
+
+                JPanel resultsPanel = new JPanel();
+                resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+                resultsPanel.setBackground(new Color(210, 225, 240)); // Light blue background
+
+                if (results.isEmpty()) {
+                    // If no properties found, show message in the same dialog
+                    JLabel noResultsLabel = new JLabel("No properties found matching the search criteria.", SwingConstants.CENTER);
+                    noResultsLabel.setFont(new Font("Arial", Font.BOLD, 18));
+                    resultsPanel.add(noResultsLabel);
+                } else {
+                    // If properties are found, display them
+                    for (Property property : results) {
+                        JPanel propertyPanel = createPropertyPanel(property);
+                        resultsPanel.add(propertyPanel);
+                        resultsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer between panels
+                    }
+                }
+
+                JScrollPane scrollPane = new JScrollPane(resultsPanel);
+                scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                resultDialog.add(scrollPane, BorderLayout.CENTER);
+
+                // Add close button at the bottom
+                JPanel buttonPanel = new JPanel();
+                JButton closeButton = new JButton("Close");
+                closeButton.setPreferredSize(new Dimension(100, 40));
+                closeButton.setBackground(new Color(23, 76, 124));
+                closeButton.setForeground(Color.WHITE);
+                closeButton.setFont(new Font("Arial", Font.BOLD, 16));
+                closeButton.addActionListener(ev -> resultDialog.dispose());
+                buttonPanel.add(closeButton);
+
+                resultDialog.add(buttonPanel, BorderLayout.SOUTH);
+                resultDialog.setVisible(true);
                 searchDialog.dispose();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Please enter valid numbers for price and square footage.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -405,55 +449,55 @@ private void displayAllProperties() {
     private void viewBuyerTransactions() {
         List<Transaction> allTransactions = fileHandler.loadTransactions();
         String projectName = JOptionPane.showInputDialog(this, "Enter the project name to view your transactions:");
-    
+
         if (projectName == null || projectName.trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a valid project name.", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-    
+
         List<Transaction> projectTransactions = filterTransactionsByProjectName(allTransactions, projectName);
-    
+
         // Sort transactions by date in descending order
         projectTransactions.sort(Comparator.comparing(Transaction::getTransactionDate).reversed());
-    
+
         // Get the last 5 transactions, if available
-        List<Transaction> lastFiveTransactions = projectTransactions.size() > 5 ?
-                projectTransactions.subList(0, 5) : projectTransactions;
-    
+        List<Transaction> lastFiveTransactions = projectTransactions.size() > 5
+                ? projectTransactions.subList(0, 5) : projectTransactions;
+
         if (lastFiveTransactions.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No transactions found for the project: " + projectName, "No Results", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JDialog transactionsDialog = new JDialog(this, "Last 5 Transactions for " + projectName, true);
             transactionsDialog.setSize(800, 400);
             transactionsDialog.setLayout(new BorderLayout());
-    
+
             String[] columnNames = {"Date", "Size SqFt", "Price", "Address"};
             DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
             JTable table = new JTable(tableModel);
-    
+
             for (Transaction transaction : lastFiveTransactions) {
                 tableModel.addRow(new Object[]{
-                        transaction.getTransactionDate(),
-                        transaction.getTransactionSqFt(),
-                        transaction.getTransactionPrice(),
-                        transaction.getAddress()
+                    transaction.getTransactionDate(),
+                    transaction.getTransactionSqFt(),
+                    transaction.getTransactionPrice(),
+                    transaction.getAddress()
                 });
             }
-    
+
             JScrollPane scrollPane = new JScrollPane(table);
             transactionsDialog.add(scrollPane, BorderLayout.CENTER);
-    
+
             JPanel buttonPanel = new JPanel();
             JButton closeButton = new JButton("Close");
             closeButton.addActionListener(e -> transactionsDialog.dispose());
             buttonPanel.add(closeButton);
             transactionsDialog.add(buttonPanel, BorderLayout.SOUTH);
-    
+
             transactionsDialog.setLocationRelativeTo(this);
             transactionsDialog.setVisible(true);
         }
     }
-    
+
     // Seller functionality: Display properties added by seller
     private void displaySellerProperties() {
         List<Property> sellerProperties = new ArrayList<>(); // Replace with properties added by this seller
@@ -697,6 +741,7 @@ private void displayAllProperties() {
 
     // NumericDocumentFilter class to allow only numeric input
     class NumericDocumentFilter extends javax.swing.text.DocumentFilter {
+
         @Override
         public void insertString(javax.swing.text.DocumentFilter.FilterBypass fb, int offset, String string, javax.swing.text.AttributeSet attr) throws javax.swing.text.BadLocationException {
             if (string.matches("\\d*")) {
