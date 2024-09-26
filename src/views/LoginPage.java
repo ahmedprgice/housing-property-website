@@ -85,7 +85,6 @@ public class LoginPage extends JFrame {
                 authenticate(); // Call authenticate method
             }
         });
-
         // Set window properties
         setLocationRelativeTo(null); // Center the window
         setVisible(true); // Show the window

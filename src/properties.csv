@@ -3,4 +3,29 @@ SizeSqM,SqFt,PropertyType,NoOfFloors,Address,Scheme,Price,Year,PricePerSqft
 200,2153,Double-Storey Terrace,2,Taman Tun Dr Ismail,Kuala Lumpur,1000000.0,2010,464.0
 90,968,Apartment,5,Desa Pandan,Setiawangsa,350000.0,2008,361.0
 250,2691,Bungalow,2,Bukit Jelutong,Shah Alam,2000000.0,2012,743.0
-1000,1,APARTMENT,2,123,ahmed,1000000.0,1,100.0
+150, 1615, Service Apartment, 20, The Scott Garden, Kuala Lumpur, 800000.0, 2016, 495.0
+300, 3229, Commercial Lot, 3, Sunway Pyramid, Bandar Sunway, 4000000.0, 2018, 1,238.0
+100, 1076, Townhouse, 2, Eco Sanctuary, Puncak Alam, 550000.0, 2021, 511.0
+85, 914, Studio Apartment, 1, KL Eco City, Kuala Lumpur, 420000.0, 2019, 460.0
+180, 1938, Semi-Detached House, 2, Taman Melawati, Kuala Lumpur, 1,500,000.0, 2013, 774.0
+220, 2368, Luxury Villa, 1, Langkawi Island, Kedah, 3,800,000.0, 2020, 1,606.0
+95, 1023, Flat, 6, PPR Titiwangsa, Kuala Lumpur, 250000.0, 2005, 244.0
+170, 1829, Double-Storey House, 2, Bandar Puteri, Klang, 900000.0, 2017, 491.0
+75, 807, Duplex Apartment, 10, Bukit Bintang, Kuala Lumpur, 650000.0, 2022, 806.0
+125, 1345, Corner Lot House, 2, Taman Bukit Cheras, Kuala Lumpur, 850000.0, 2019, 631.0
+120, 1291, Condominium, 15, Menara U, Section 13, 600000.0, 2015, 465.0
+200, 2153, Double-Storey Terrace, 2, Taman Tun Dr Ismail, Kuala Lumpur, 1000000.0, 2010, 464.0
+90, 968, Apartment, 5, Desa Pandan, Setiawangsa, 350000.0, 2008, 361.0
+250, 2691, Bungalow, 2, Bukit Jelutong, Shah Alam, 2000000.0, 2012, 743.0
+150, 1615, Service Apartment, 20, The Scott Garden, Kuala Lumpur, 800000.0, 2016, 495.0
+300, 3229, Commercial Lot, 3, Sunway Pyramid, Bandar Sunway, 4000000.0, 2018, 1,238.0
+100, 1076, Townhouse, 2, Eco Sanctuary, Puncak Alam, 550000.0, 2021, 511.0
+85, 914, Studio Apartment, 1, KL Eco City, Kuala Lumpur, 420000.0, 2019, 460.0
+180, 1938, Semi-Detached House, 2, Taman Melawati, Kuala Lumpur, 1500000.0, 2013, 774.0
+220, 2368, Luxury Villa, 1, Langkawi Island, Kedah, 3800000.0, 2020, 1,606.0
+95, 1023, Flat, 6, PPR Titiwangsa, Kuala Lumpur, 250000.0, 2005, 244.0
+170, 1829, Double-Storey House, 2, Bandar Puteri, Klang, 900000.0, 2017, 491.0
+75, 807, Duplex Apartment, 10, Bukit Bintang, Kuala Lumpur, 650000.0, 2022, 806.0
+125, 1345, Corner Lot House, 2, Taman Bukit Cheras, Kuala Lumpur, 850000.0, 2019, 631.0
+11,1,Apartment,1,1,1,1.0,1,1.0
+100,1200,Apartment,3,multimedia,mutiara,10000.0,2005,500.0

@@ -14,3 +14,4 @@ sd,123,df,SELLER
 1212,12,12,SELLER
 lok,123,lok@gmail.com,SELLER
 123,123,123,SELLER
+ahmed,123,ahmed@gmail.com,BUYER

@@ -232,7 +232,17 @@ public class HomeFinderApp extends JFrame {
 
         JTextField sizeSqMField = createNumericInputField("Size (sqm):", gbc, addDialog, 1);
         JTextField sqFtField = createNumericInputField("Size (sqft):", gbc, addDialog, 2);
-        JTextField propertyTypeField = createInputField("Property Type:", gbc, addDialog, 3);
+
+        // Replace propertyTypeField with JComboBox
+        String[] propertyTypes = {"Apartment", "Condominium", "Bungalow", "Semi-Detached House", "Double-Storey Terrace", "Commercial Lot"};
+        JComboBox<String> propertyTypeComboBox = new JComboBox<>(propertyTypes);
+        propertyTypeComboBox.setPreferredSize(new Dimension(160, 25));
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        addDialog.add(new JLabel("Property Type:", SwingConstants.RIGHT), gbc);
+        gbc.gridx = 1;
+        addDialog.add(propertyTypeComboBox, gbc);
+
         JTextField noOfFloorsField = createNumericInputField("Number of Floors:", gbc, addDialog, 4);
         JTextField addressField = createInputField("Address:", gbc, addDialog, 5);
         JTextField schemeField = createInputField("Project Name:", gbc, addDialog, 6);
@@ -257,7 +267,7 @@ public class HomeFinderApp extends JFrame {
             try {
                 int sizeSqM = Integer.parseInt(sizeSqMField.getText());
                 int sqFt = Integer.parseInt(sqFtField.getText());
-                String propertyType = propertyTypeField.getText().trim();
+                String propertyType = (String) propertyTypeComboBox.getSelectedItem(); // Get selected property type
                 int noOfFloors = Integer.parseInt(noOfFloorsField.getText());
                 String address = addressField.getText().trim();
                 String scheme = schemeField.getText().trim();
@@ -297,23 +307,23 @@ public class HomeFinderApp extends JFrame {
         searchDialog.setSize(400, 600);
         searchDialog.setLayout(new GridBagLayout());
         searchDialog.getContentPane().setBackground(new Color(5, 33, 67));
-
+    
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
+    
         JLabel infoLabel = new JLabel("Search for a property", SwingConstants.CENTER);
         infoLabel.setForeground(Color.WHITE);
         infoLabel.setFont(new Font("Arial", Font.BOLD, 24));
-
+    
         gbc.gridwidth = 2;
         gbc.gridx = 0;
         gbc.gridy = 0;
         searchDialog.add(infoLabel, gbc);
-
+    
         gbc.gridwidth = 1;
         gbc.gridy++;
-
+    
         JTextField minPriceField = createNumericInputField("Minimum Price:", gbc, searchDialog, gbc.gridy);
         gbc.gridy++;
         JTextField maxPriceField = createNumericInputField("Maximum Price:", gbc, searchDialog, gbc.gridy);
@@ -324,7 +334,7 @@ public class HomeFinderApp extends JFrame {
         gbc.gridy++;
         JTextField propertyTypeField = createInputField("Property Type:", gbc, searchDialog, gbc.gridy);
         gbc.gridy++;
-
+    
         // Project Name ComboBox
         JComboBox<String> projectNameComboBox = new JComboBox<>(getAllProjectNames());
         projectNameComboBox.setPreferredSize(new Dimension(200, 30));
@@ -332,7 +342,7 @@ public class HomeFinderApp extends JFrame {
         projectNameComboBox.setForeground(Color.BLACK);
         projectNameComboBox.setFont(new Font("Arial", Font.PLAIN, 16));
         addInputField(searchDialog, gbc, "Project Name:", projectNameComboBox, gbc.gridy);
-
+    
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 2;
@@ -342,7 +352,7 @@ public class HomeFinderApp extends JFrame {
         searchButton.setForeground(Color.WHITE);
         searchButton.setFont(new Font("Arial", Font.BOLD, 18));
         searchDialog.add(searchButton, gbc);
-
+    
         searchButton.addActionListener(e -> {
             try {
                 // Retrieve search inputs
@@ -352,20 +362,21 @@ public class HomeFinderApp extends JFrame {
                 int maxSqFt = Integer.parseInt(maxSqFtField.getText().isEmpty() ? String.valueOf(Integer.MAX_VALUE) : maxSqFtField.getText());
                 String propertyType = propertyTypeField.getText().trim();
                 String projectName = (String) projectNameComboBox.getSelectedItem();
-
+    
                 // Filter properties based on criteria
                 List<Property> results = filterProperties(allProperties, minSqFt, maxSqFt, minPrice, maxPrice, propertyType, projectName);
-
-                // Open a new dialog to show results
+    
+                // Open a new dialog to show results with a larger size
                 JDialog resultDialog = new JDialog(this, "Search Results", true);
-                resultDialog.setSize(500, 400);
+                resultDialog.setSize(900, 700); // Set the new size for the results dialog
                 resultDialog.setLayout(new BorderLayout());
                 resultDialog.setLocationRelativeTo(this);
-
+                resultDialog.getContentPane().setBackground(new Color(210, 225, 240)); // Match the light blue background
+    
                 JPanel resultsPanel = new JPanel();
                 resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
                 resultsPanel.setBackground(new Color(210, 225, 240)); // Light blue background
-
+    
                 if (results.isEmpty()) {
                     // If no properties found, show message in the same dialog
                     JLabel noResultsLabel = new JLabel("No properties found matching the search criteria.", SwingConstants.CENTER);
@@ -379,12 +390,12 @@ public class HomeFinderApp extends JFrame {
                         resultsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer between panels
                     }
                 }
-
+    
                 JScrollPane scrollPane = new JScrollPane(resultsPanel);
                 scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
                 scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
                 resultDialog.add(scrollPane, BorderLayout.CENTER);
-
+    
                 // Add close button at the bottom
                 JPanel buttonPanel = new JPanel();
                 JButton closeButton = new JButton("Close");
@@ -394,7 +405,7 @@ public class HomeFinderApp extends JFrame {
                 closeButton.setFont(new Font("Arial", Font.BOLD, 16));
                 closeButton.addActionListener(ev -> resultDialog.dispose());
                 buttonPanel.add(closeButton);
-
+    
                 resultDialog.add(buttonPanel, BorderLayout.SOUTH);
                 resultDialog.setVisible(true);
                 searchDialog.dispose();
@@ -402,15 +413,16 @@ public class HomeFinderApp extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please enter valid numbers for price and square footage.", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
+    
         searchDialog.setLocationRelativeTo(this);
         searchDialog.setVisible(true);
     }
-
+    
     // Buyer functionality: Display search results
+// Buyer functionality: Display search results
     private void displaySearchResults(List<Property> results) {
         JDialog resultsDialog = new JDialog(this, "Search Results", true);
-        resultsDialog.setSize(750, 600);
+        resultsDialog.setSize(900, 600); // Set the size to be bigger
         resultsDialog.setLayout(new BorderLayout());
         resultsDialog.setLocationRelativeTo(this);
 
@@ -418,26 +430,46 @@ public class HomeFinderApp extends JFrame {
         resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
         resultsPanel.setBackground(new Color(210, 225, 240)); // Light blue background
 
-        for (Property property : results) {
-            JPanel propertyPanel = createPropertyPanel(property);
-            resultsPanel.add(propertyPanel);
-            resultsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer between panels
+        if (results.isEmpty()) {
+            // If no properties found, show message in the same dialog
+            JLabel noResultsLabel = new JLabel("No properties found matching the search criteria.", SwingConstants.CENTER);
+            noResultsLabel.setFont(new Font("Arial", Font.BOLD, 18));
+            resultsPanel.add(noResultsLabel);
+        } else {
+            // If properties are found, display them
+            for (Property property : results) {
+                JPanel propertyPanel = createPropertyPanel(property);
+
+                // Create Buy button for each property
+                JButton buyButton = new JButton("Buy");
+                buyButton.setPreferredSize(new Dimension(100, 30));
+                buyButton.setBackground(new Color(46, 204, 113));
+                buyButton.setForeground(Color.WHITE);
+                buyButton.setFont(new Font("Arial", Font.BOLD, 16));
+
+                // Action listener for Buy button
+                buyButton.addActionListener(e -> buyProperty(property, resultsDialog));
+
+                // Add the Buy button to the property panel
+                propertyPanel.add(buyButton);
+                resultsPanel.add(propertyPanel);
+                resultsPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spacer between panels
+            }
         }
 
         JScrollPane scrollPane = new JScrollPane(resultsPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
+        // Add close button at the bottom
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(new Color(5, 33, 67));
-        JButton backButton = new JButton("Back");
-        backButton.setFont(new Font("Arial", Font.BOLD, 16));
-        backButton.setPreferredSize(new Dimension(100, 40));
-        backButton.setBackground(new Color(23, 76, 124));
-        backButton.setForeground(Color.WHITE);
-        backButton.setFocusPainted(false);
-        backButton.addActionListener(e -> resultsDialog.dispose());
-        buttonPanel.add(backButton);
+        JButton closeButton = new JButton("Close");
+        closeButton.setPreferredSize(new Dimension(100, 40));
+        closeButton.setBackground(new Color(23, 76, 124));
+        closeButton.setForeground(Color.WHITE);
+        closeButton.setFont(new Font("Arial", Font.BOLD, 16));
+        closeButton.addActionListener(ev -> resultsDialog.dispose());
+        buttonPanel.add(closeButton);
 
         resultsDialog.add(scrollPane, BorderLayout.CENTER);
         resultsDialog.add(buttonPanel, BorderLayout.SOUTH);
